@@ -38,7 +38,7 @@ export default ({
                       key={c}
                       className={`transition-200 transition-all flex justify-center items-center font-head text-gray-7 ${
                         col === -1 && !solved
-                          ? 'cursor-pointer hover:bg-gray-1 hover:border hover:border-red-3 active:bg-white active:border-red-2'
+                          ? 'cursor-pointer border-red-2 hover:bg-gray-1 hover:border hover:border-red-3 active:bg-white'
                           : 'cursor-default'
                       } ${
                         selectorVisible &&

@@ -37,8 +37,6 @@ export default class App extends React.Component {
         const Sudoku = new GenerateSudoku(this.state.size)
         Sudoku.BackTrack(Sudoku.map)
         const Boards = new BoardLayers(this.state.size, this.state.level, Sudoku.map)
-        console.log(Boards.getBaseTable())
-        console.log(Sudoku.BackTrack(Sudoku.map))
         this.setState({
           map: Boards.getBaseTable(),
           solutionMap: Sudoku.BackTrack(Sudoku.map),
@@ -57,12 +55,29 @@ export default class App extends React.Component {
   save = () => {
     const history = Object.assign({}, this.state.history)
     const timestamp = new Date().valueOf()
-    history[timestamp] = this.state.map
+    history[timestamp] = {
+      map: this.state.map,
+      activeMap: this.state.activeMap,
+      solutionMap: this.state.solutionMap,
+      bigMap: this.state.bigMap,
+      solved: this.state.solved,
+    }
     this.setState({ history })
   }
 
   clear = () => {
-    this.setState({ map: [], active: false })
+    this.setState({
+      map: [],
+      active: false,
+      solved: false,
+      solutionMap: [],
+      bigMap: new Array(Math.sqrt(this.state.size))
+        .fill(0)
+        .map(el => new Array(Math.sqrt(this.state.size)).fill(0)),
+      activeMap: new Array(this.state.size)
+        .fill(null)
+        .map(el => new Array(this.state.size).fill(null)),
+    })
   }
 
   changeSize = e => {
@@ -107,6 +122,7 @@ export default class App extends React.Component {
 
   checkSolution = () => {
     const Validator = new ValidateSudoku(
+      this.state.size,
       this.state.map,
       this.state.activeMap,
       this.state.solutionMap
