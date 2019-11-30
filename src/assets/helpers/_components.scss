@@ -12,3 +12,18 @@
   @apply bg-gray-0 top-0 left-0 relative w-screen;
   height: 120px;
 }
+
+.active-selector {
+  visibility: visible;
+  opacity: 1;
+}
+
+.inactive-selector {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.selecting-node {
+  background-color: #499aaf !important;
+  color: #fff !important;
+}

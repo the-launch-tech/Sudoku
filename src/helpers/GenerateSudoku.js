@@ -2,12 +2,11 @@ export default class CreateSudoku {
   constructor(size) {
     this.grid = {}
     this.base = 0
-    this.removeCount = Math.floor(size ** 2 / 2)
-    console.log(this.removeCount)
 
-    this.map = new Array(size).fill(0).map(el => new Array(size).fill(0))
-
-    this.setSize(size).setBoxSize(size)
+    this.setSize(size)
+      .setBoxSize(size)
+      .setRemoveCount(size)
+      .setEmptyMap(size)
   }
 
   range = (start, end) => {
@@ -16,6 +15,16 @@ export default class CreateSudoku {
 
   shuffle = arr => {
     return arr.sort((a, b) => 0.5 - Math.random())
+  }
+
+  setEmptyMap = size => {
+    this.map = new Array(size).fill(0).map(el => new Array(size).fill(0))
+    return this
+  }
+
+  setRemoveCount = size => {
+    this.removeCount = Math.floor(size ** 2 / 2)
+    return this
   }
 
   setSize = size => {
@@ -96,6 +105,4 @@ export default class CreateSudoku {
     }
     return false
   }
-
-  removeElements = () => {}
 }

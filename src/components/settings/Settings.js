@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default ({ generate, clear, save, changeLevel }) => {
+export default ({ generate, clear, save, changeLevel, changeSize }) => {
   return (
     <nav className="container ml-auto mr-auto flex justify-between items-center h-full">
       <ul className="flex justify-start items-center">
@@ -31,15 +31,29 @@ export default ({ generate, clear, save, changeLevel }) => {
           className="text-white mr-5 ml-5 font-head text-sm flex flex-col  justify-center items-center"
           onClick={save}
         >
+          <span className="">Size</span>
+          <select
+            className="bg-tran cursor-pointer outline-none transition-all transition-200 hover:text-red-2"
+            name="sudokuSize"
+            onChange={changeSize}
+          >
+            <option value="4">4</option>
+            <option value="9">9</option>
+          </select>
+        </li>
+        <li
+          className="text-white mr-5 ml-5 font-head text-sm flex flex-col  justify-center items-center"
+          onClick={save}
+        >
           <span className="">Difficulty</span>
           <select
             className="bg-tran cursor-pointer outline-none transition-all transition-200 hover:text-red-2"
             name="sudokuLevel"
             onChange={changeLevel}
           >
-            <option value="4">4</option>
-            <option value="9">9</option>
-            <option value="16">16</option>
+            <option value="CHILD">Child Brain</option>
+            <option value="NORMAL_HUMAN">Normal Human</option>
+            <option value="MENSA_MEMBER">Mensa Member</option>
           </select>
         </li>
       </ul>
