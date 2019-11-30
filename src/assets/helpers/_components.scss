@@ -1,0 +1,14 @@
+.header {
+  @apply bg-red-9 top-0 left-0 relative w-screen shadow-xl border-b border-solid border-gray-0;
+  height: 70px;
+}
+
+.body {
+  @apply w-screen p-10;
+  height: calc(100vh - 190px);
+}
+
+.footer {
+  @apply bg-gray-0 top-0 left-0 relative w-screen;
+  height: 120px;
+}
