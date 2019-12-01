@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default ({ generate, clear, save, changeLevel, changeSize }) => {
+export default ({ generate, clear, toggleSaveModal, changeLevel, changeSize, active, solved }) => {
   return (
     <nav className="container ml-auto mr-auto flex justify-between items-center h-full">
       <ul className="flex justify-start items-center">
@@ -15,22 +15,23 @@ export default ({ generate, clear, save, changeLevel, changeSize }) => {
         >
           Generate
         </li>
-        <li
-          className="text-white mr-5 ml-5 font-head text-sm cursor-pointer transition-all transition-200 hover:text-red-2"
-          onClick={clear}
-        >
-          Clear
-        </li>
-        <li
-          className="text-white mr-5 ml-5 font-head text-sm cursor-pointer transition-all transition-200 hover:text-red-2"
-          onClick={save}
-        >
-          Save
-        </li>
-        <li
-          className="text-white mr-5 ml-5 font-head text-sm flex flex-col  justify-center items-center"
-          onClick={save}
-        >
+        {(active || solved) && (
+          <React.Fragment>
+            <li
+              className="text-white mr-5 ml-5 font-head text-sm cursor-pointer transition-all transition-200 hover:text-red-2"
+              onClick={clear}
+            >
+              Clear
+            </li>
+            <li
+              className="text-white mr-5 ml-5 font-head text-sm cursor-pointer transition-all transition-200 hover:text-red-2"
+              onClick={toggleSaveModal}
+            >
+              Save
+            </li>
+          </React.Fragment>
+        )}
+        <li className="text-white mr-5 ml-5 font-head text-sm flex flex-col  justify-center items-center">
           <span className="">Size</span>
           <select
             className="bg-tran cursor-pointer outline-none transition-all transition-200 hover:text-red-2"
@@ -41,10 +42,7 @@ export default ({ generate, clear, save, changeLevel, changeSize }) => {
             <option value="9">9</option>
           </select>
         </li>
-        <li
-          className="text-white mr-5 ml-5 font-head text-sm flex flex-col  justify-center items-center"
-          onClick={save}
-        >
+        <li className="text-white mr-5 ml-5 font-head text-sm flex flex-col  justify-center items-center">
           <span className="">Difficulty</span>
           <select
             className="bg-tran cursor-pointer outline-none transition-all transition-200 hover:text-red-2"

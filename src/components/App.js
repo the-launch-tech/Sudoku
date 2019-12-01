@@ -2,6 +2,7 @@ import React from 'react'
 import Settings from './settings/Settings'
 import Player from './player/Player'
 import History from './history/History'
+import SaveModal from './history/SaveModal'
 import Resources from './resources/Resources'
 import GenerateSudoku from '../helpers/GenerateSudoku'
 import BoardLayers from '../helpers/BoardLayers'
@@ -11,19 +12,35 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
 
+    this.defaultSize = 4
+
     this.state = {
+      history: {},
       map: [],
-      bigMap: new Array(Math.sqrt(4)).fill(0).map(el => new Array(Math.sqrt(4)).fill(0)),
-      activeMap: new Array(4).fill(null).map(el => new Array(4).fill(null)),
+      bigMap: this.initializeBigMap(this.defaultSize),
+      activeMap: this.initializeActiveMap(this.defaultSize),
       solutionMap: [],
-      size: 4,
-      shadowSize: 4,
+      size: this.defaultSize,
+      shadowSize: this.defaultSize,
       shadowLevel: 'CHILD',
       active: false,
-      history: {},
       selectorVisible: false,
       solved: false,
+      saveModalOpen: false,
+      gameTimestamp: null,
     }
+  }
+
+  componentDidMount() {
+    this.getTimestamp()
+  }
+
+  initializeBigMap = size => {
+    return new Array(Math.sqrt(size)).fill(0).map(el => new Array(Math.sqrt(size)).fill(0))
+  }
+
+  initializeActiveMap = size => {
+    return new Array(size).fill(null).map(el => new Array(size).fill(null))
   }
 
   generate = () => {
@@ -40,29 +57,16 @@ export default class App extends React.Component {
         this.setState({
           map: Boards.getBaseTable(),
           solutionMap: Sudoku.BackTrack(Sudoku.map),
-          activeMap: new Array(this.state.size)
-            .fill(null)
-            .map(el => new Array(this.state.size).fill(null)),
-          bigMap: new Array(Math.sqrt(this.state.size))
-            .fill(0)
-            .map(el => new Array(Math.sqrt(this.state.size)).fill(0)),
+          activeMap: this.initializeActiveMap(this.state.size),
+          bigMap: this.initializeBigMap(this.state.size),
           active: true,
         })
       }
     )
   }
 
-  save = () => {
-    const history = Object.assign({}, this.state.history)
-    const timestamp = new Date().valueOf()
-    history[timestamp] = {
-      map: this.state.map,
-      activeMap: this.state.activeMap,
-      solutionMap: this.state.solutionMap,
-      bigMap: this.state.bigMap,
-      solved: this.state.solved,
-    }
-    this.setState({ history })
+  toggleSaveModal = () => {
+    this.setState(prev => ({ saveModalOpen: !prev.saveModalOpen }))
   }
 
   clear = () => {
@@ -71,12 +75,8 @@ export default class App extends React.Component {
       active: false,
       solved: false,
       solutionMap: [],
-      bigMap: new Array(Math.sqrt(this.state.size))
-        .fill(0)
-        .map(el => new Array(Math.sqrt(this.state.size)).fill(0)),
-      activeMap: new Array(this.state.size)
-        .fill(null)
-        .map(el => new Array(this.state.size).fill(null)),
+      activeMap: this.initializeActiveMap(this.state.size),
+      bigMap: this.initializeBigMap(this.state.size),
     })
   }
 
@@ -130,15 +130,61 @@ export default class App extends React.Component {
     this.setState({ solved: Validator.isSolved() })
   }
 
+  saveGame = () => {
+    const saveNameInput = document.querySelector('input[name="gameName"]').value
+    const history = Object.assign({}, this.state.history)
+    history[saveNameInput ? saveNameInput : 'Game ID: ' + this.state.gameTimestamp] = {
+      map: this.state.map,
+      activeMap: this.state.activeMap,
+      solutionMap: this.state.solutionMap,
+      bigMap: this.state.bigMap,
+      solved: this.state.solved,
+      timestamp: this.state.gameTimestamp,
+      size: this.state.size,
+      boxSize: Math.sqrt(this.state.size),
+      level: this.state.level,
+    }
+    this.setState({ history }, () => {
+      this.toggleSaveModal()
+      this.clear()
+    })
+  }
+
+  getTimestamp = () => {
+    this.setState({ gameTimestamp: Math.floor(Date.now() / 1000) }, () => {
+      setTimeout(() => this.getTimestamp(), 5000)
+    })
+  }
+
+  restoreGame = game => {
+    this.setState({
+      map: game.map,
+      solutionMap: game.solutionMap,
+      activeMap: game.activeMap,
+      bigMap: game.bigMap,
+      size: game.size,
+      level: game.level,
+      active: true,
+      solved: game.solved,
+    })
+  }
+
   render() {
+    console.log(this.state)
     return (
       <div className="w-screen h-screen">
+        <SaveModal
+          {...this.props}
+          {...this.state}
+          saveGame={this.saveGame}
+          toggleSaveModal={this.toggleSaveModal}
+        />
         <header className="header">
           <Settings
             {...this.props}
             {...this.state}
             generate={this.generate}
-            save={this.save}
+            toggleSaveModal={this.toggleSaveModal}
             clear={this.clear}
             changeLevel={this.changeLevel}
             changeSize={this.changeSize}
@@ -151,7 +197,7 @@ export default class App extends React.Component {
             openSelector={this.openSelector}
             handleSelection={this.handleSelection}
           />
-          <History {...this.props} {...this.state} />
+          <History {...this.props} {...this.state} restoreGame={this.restoreGame} />
         </main>
         <footer className="footer">
           <Resources {...this.props} {...this.state} />

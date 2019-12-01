@@ -27,3 +27,76 @@
   background-color: #499aaf !important;
   color: #fff !important;
 }
+
+.modal-wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(225, 225, 225, 0.5);
+  position: fixed;
+  z-index: 99999;
+  transition: 0.2s;
+
+  i {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+
+  .modal-container {
+    position: relative;
+    min-width: 400px;
+
+    .modal-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1rem 1rem;
+    }
+  }
+
+  &.inactive-modal {
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  &.active-modal {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.basic-input {
+  transition: 0.2s;
+  height: 50px;
+  background-color: #fff;
+  @apply font-head text-sm text-gray-6 border border-gray-1 rounded-lg w-full p-2;
+
+  &:hover {
+    @apply bg-gray-0;
+  }
+
+  &:focus {
+    @apply bg-white outline-none;
+  }
+}
+
+.basic-button {
+  transition: 0.2s;
+  @apply font-head text-sm text-red-4 border border-red-3 bg-white pt-2 pb-2 pr-5 pl-5 outline-none cursor-pointer;
+
+  &:hover {
+    @apply bg-red-3 text-white;
+  }
+
+  &:active {
+    @apply bg-white text-red-7;
+  }
+
+  &:focus {
+    @apply outline-none;
+  }
+}
