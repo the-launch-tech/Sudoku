@@ -130,10 +130,14 @@ export default class App extends React.Component {
     this.setState({ solved: Validator.isSolved() })
   }
 
+  getGameID = saveNameInput => {
+    return saveNameInput ? saveNameInput : 'Game ID: ' + this.state.gameTimestamp
+  }
+
   saveGame = () => {
     const saveNameInput = document.querySelector('input[name="gameName"]').value
     const history = Object.assign({}, this.state.history)
-    history[saveNameInput ? saveNameInput : 'Game ID: ' + this.state.gameTimestamp] = {
+    history[this.getGameID(saveNameInput)] = {
       map: this.state.map,
       activeMap: this.state.activeMap,
       solutionMap: this.state.solutionMap,
